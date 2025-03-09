@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задача: Поиск достижимых светофоров в топологически связанном графе</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 5px;
+            font-family: Consolas, monospace;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Задача: Поиск достижимых светофоров в топологически связанном графе</h1>
+
+    <p><strong>Условие:</strong></p>
+    <p>На железнодорожной станции представлена система объектов, связанных двунаправленными связями. Система включает три типа объектов:</p>
+    <ul>
+        <li><strong>Светфор (Signal)</strong> – Имеет только одну топологическую связь.</li>
+        <li><strong>Стрелка (Point)</strong> – Может иметь от 2 до 3 связей.</li>
+        <li><strong>Секция (Section)</strong> – Имеет 2 связи.</li>
+    </ul>
+    <p>Между объектами существуют двунаправленные связи, но при поиске пути нельзя двигаться назад (в сторону объекта, из которого пришли).</p>
+
+    <p><strong>Диаграмма классов:</strong></p>
+
+    <img src="Диаграмма классов.png" alt="Диаграмма классов" width="700">
+
+    <p><strong>Задача:</strong></p>
+    <p>Реализовать метод <code>getReachableSignals()</code> внутри класса <code>Signal</code>, который возвращает список ID всех светофоров, достижимых из данного <code>Signal</code>, с учётом ограничений на движение назад.</p>
+
+    <p><strong>Входные данные:</strong></p>
+    <p>Граф объектов, содержащий Signal, Point и Section. Связи между объектами передаются вызовами <code>addConnection()</code>.</p>
+    <p>Метод <code>getReachableSignals()</code> вызывается для одного из Signal.</p>
+    <p><strong>Выходные данные:</strong></p>
+    <p>Метод <code>getReachableSignals()</code> должен вернуть список ID всех сигналов, до которых можно добраться из текущего Signal, не заходя назад.</p>
+
+    <p><strong>Пример:</strong></p>
+    <pre>
+Исходные данные:
+
+<img src="Схема данных.png" alt="Топология" width="400">
+
+Вызов метода:
+std::vector<int> reachable = signal1->getReachableSignals();
+
+Ожидаемый вывод:
+Signals reachable from 1: 2 3 4
+    </pre>
+
+    <p><strong>Ограничения:</strong></p>
+    <ul>
+        <li>Количество объектов: до <code>10⁵</code>.</li>
+        <li>В графе нет циклов, но связи двунаправленные.</li>
+        <li>Время работы должно быть не хуже <code>O(N)</code>.</li>
+    </ul>
+
+    <p><strong>Дополнительные требования:</strong></p>
+    <ul>
+        <li>✅ Решение должно быть объектно-ориентированным (ООП).</li>
+        <li>✅ Запрещено использовать <code>dynamic_cast</code> или <code>typeid</code>.</li>
+        <li>✅ Использовать виртуальные функции для реализации полиморфизма.</li>
+    </ul>
+
+    <p><strong>Заготовка кода:</strong></p>
+    <pre>
+class Object {
+protected:
+    int id;
+    std::vector<std::shared_ptr<Object>> connections;
+
+public:
+    explicit Object(int id) : id(id) {}
+    virtual ~Object() = default;
+
+    void addConnection(std::shared_ptr<Object> obj) {
+        if (canAddConnection()) {
+            connections.push_back(obj);
+        }
+    }
+
+    virtual bool canAddConnection() const = 0;
+
+    int getId() const { return id; }
+};
+
+class Signal : public Object {
+public:
+    explicit Signal(int id) : Object(id) {}
+
+    bool canAddConnection() const override {
+        return connections.size() < 1;  // Только одна связь
+    }
+
+    std::vector<int> getReachableSignals() const {
+        // TO-DO
+        return {};
+    }
+};
+
+class Point : public Object {
+public:
+    explicit Point(int id) : Object(id) {}
+
+    bool canAddConnection() const override {
+        return connections.size() < 3;  // До трех связей
+    }
+};
+
+class Section : public Object {
+public:
+    explicit Section(int id) : Object(id) {}
+
+    bool canAddConnection() const override {
+        return connections.size() < 2;  // Две связи
+    }
+};</pre>
+</body>
+</html>
